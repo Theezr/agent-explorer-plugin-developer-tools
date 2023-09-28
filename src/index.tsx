@@ -3,7 +3,7 @@ import {
   CodeOutlined,
 } from '@ant-design/icons'
 
-import { IPlugin } from './types';
+import { IPlugin } from '@veramo-community/agent-explorer-plugin';
 import DataGenerator from './DataGenerator';
 import CreateProfileCredential from './CreateProfileCredential';
 import IssueCredential from './IssueCredential';

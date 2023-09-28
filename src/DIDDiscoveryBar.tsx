@@ -3,7 +3,7 @@ import { Input, AutoComplete } from 'antd'
 import { useVeramo } from '@veramo-community/veramo-react'
 import { IDIDDiscovery } from '@veramo/did-discovery'
 import { SelectProps } from 'antd/es/select'
-import { shortId } from './utils/did'
+import { shortId } from '@veramo-community/agent-explorer-plugin'
 
 interface DIDDiscoveryBarProps {
   handleSelect: any
