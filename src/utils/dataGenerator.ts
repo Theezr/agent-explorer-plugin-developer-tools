@@ -6,6 +6,8 @@ import {
 } from '@veramo/core'
 import randomWords from 'random-words'
 import { kudosMessages } from './kudos-messages'
+import { createAvatar } from '@dicebear/core';
+import { avataaars } from '@dicebear/collection';
 
 export function getRandomDate(from: Date, to: Date) {
   const fromTime = from.getTime()
@@ -108,6 +110,16 @@ export async function createProfileCredentials(
 
   return Promise.all(
     results.map(async (profile: any, key: number) => {
+
+      const picture = createAvatar(avataaars, {
+        seed: profile.name.first + ' ' + profile.name.last,
+        backgroundType: ['solid'],
+        // web safe colors
+        backgroundColor: ['b6e3f4','c0aede','d1d4f9','ffd5dc','ffdfbf'],
+      }).toDataUriSync();
+
+      console.log(picture)
+      
       return await createVerifiableCredential({
         save: true,
         proofFormat: 'jwt',
@@ -123,7 +135,7 @@ export async function createProfileCredentials(
             lastName: profile.name.last,
             nickname: profile.username,
             email: profile.email,
-            picture: profile.picture.large,
+            picture,
           },
         },
       })
@@ -188,4 +200,24 @@ export async function createKudosCredentials(
       )
     }),
   )
+}
+
+
+async function convertImageToDataURL(url: string): Promise<string> {
+  // Step 1: Fetch the image
+  const response = await fetch(url, {mode: 'cors'});
+  const blob = await response.blob(); // Step 2: Convert to Blob
+
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader(); // Step 3: Instantiate FileReader
+
+    reader.onloadend = () => {
+      const base64data = reader.result; // Step 4: Get base64 string
+      resolve(`data:image/jpeg;base64,${base64data}`); // Step 5: Create Data URL
+    };
+
+    reader.onerror = reject;
+
+    reader.readAsDataURL(blob); // Read the Blob as DataURL
+  });
 }

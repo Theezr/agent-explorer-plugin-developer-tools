@@ -10,6 +10,8 @@
 	"devDependencies": {
 		"@ant-design/icons": "^5.2.5",
 		"@ant-design/pro-components": "^2.6.12",
+		"@dicebear/collection": "^7.0.1",
+		"@dicebear/core": "^7.0.1",
 		"@rjsf/antd": "^5.7.3",
 		"@rjsf/core": "^5.7.3",
 		"@rjsf/utils": "^5.7.3",

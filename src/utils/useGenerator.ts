@@ -2,8 +2,8 @@ import { useState } from 'react'
 
 export function useGenerator() {
   const [identifierProvider, setIdentifierProvider] =
-    useState<string>('did:ethr:goerli')
-  const [identifierCount, setIdentifierCount] = useState<number>(50)
+    useState<string>('')
+  const [identifierCount, setIdentifierCount] = useState<number>(10)
   const [identifiersGenerating, setIdentifiersGenerating] =
     useState<boolean>(false)
   const [alias, setAlias] = useState<string>('')

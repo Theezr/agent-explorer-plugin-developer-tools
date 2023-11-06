@@ -9,6 +9,7 @@ import {
   Divider,
   Collapse,
   Space,
+  App
 } from 'antd'
 import { useVeramo } from '@veramo-community/veramo-react'
 import { useQuery, useQueryClient } from 'react-query'
@@ -23,6 +24,7 @@ const { Panel } = Collapse
 const DataGenerator: React.FC = () => {
   const queryClient = useQueryClient()
   const { agent } = useVeramo<IDIDManager & IDataStoreORM>()
+  const { notification } = App.useApp()
   const { data: identifiers } = useQuery(
     ['identifiers', { agentId: agent?.context.id }],
     () => agent?.didManagerFind(),
@@ -30,6 +32,9 @@ const DataGenerator: React.FC = () => {
   const { data: providers } = useQuery(
     ['providers', { agentId: agent?.context.id }],
     () => agent?.didManagerGetProviders(),
+    { onSuccess(data) {
+      if (data) setIdentifierProvider(data[0])
+    },}
   )
 
   const {
@@ -60,6 +65,10 @@ const DataGenerator: React.FC = () => {
       identifierProvider,
       identifierCount,
     )
+    notification.success({
+      message: 'Success',
+      description: `Generated ${identifierCount} identifiers`,
+    })
     setIdentifiersGenerating(false)
     queryClient.invalidateQueries('identifiers')
   }
@@ -74,6 +83,11 @@ const DataGenerator: React.FC = () => {
         // @ts-ignore
         identifiers,
       )
+
+      notification.success({
+        message: 'Success',
+        description: `Generated ${identifiers.length} credentials`,
+      })
 
       setCredentialProfilesGenerating(false)
     }
@@ -106,13 +120,14 @@ const DataGenerator: React.FC = () => {
         agent,
       )
 
+      notification.success({
+        message: 'Success',
+        description: `Issued kudos credentials from ${fromCount} identifiers to ${toCount} identifiers`,
+      })
+
       setCredentialsP2PGenerating(false)
     }
   }
-
-  useEffect(() => {
-    setIdentifierProvider('did:ethr:goerli')
-  }, [setIdentifierProvider])
 
   return (
     <PageContainer>
@@ -141,7 +156,7 @@ const DataGenerator: React.FC = () => {
             <Form.Item label="Provider">
               <Select
                 onSelect={(value: string) => setIdentifierProvider(value)}
-                defaultValue="did:ethr:goerli"
+                value={identifierProvider}
               >
                 {providers?.map((provider: string) => {
                   return (
