@@ -6158,7 +6158,7 @@ var DataGenerator = () => {
         wrapperCol: { span: 14 },
         layout: "vertical",
         children: [
-          /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Text, { children: "Generate multiple identifiersasasasass" }),
+          /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Text, { children: "Generate multiple identifiers" }),
           /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_antd.Form.Item, { label: "Identifier count", children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
             import_antd.Input,
             {
@@ -6857,6 +6857,7 @@ var Plugin = {
     return {
       name: "Developer tools",
       description: "Collection of tools for experimenting with verifiable data",
+      icon: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(CodeOutlined_default2, {}),
       routes: [
         {
           path: "/developer/data-generator",
