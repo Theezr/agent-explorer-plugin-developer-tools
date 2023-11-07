@@ -15,6 +15,7 @@ const Plugin: IPlugin = {
         return {
           name: 'Developer tools',
           description: 'Collection of tools for experimenting with verifiable data',
+          icon: <CodeOutlined />,
           routes: [
             {
               path: '/developer/data-generator',
