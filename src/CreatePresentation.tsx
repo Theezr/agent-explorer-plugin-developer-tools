@@ -74,7 +74,6 @@ const CreatePresentation: React.FC = () => {
   const [sending] = useState<boolean>(false)
   const [issuer, setIssuer] = useState<string>('')
   const [subject, setSubject] = useState<string>('')
-  const [proofFormat, setProofFormat] = useState<ProofFormat>('jwt')
   const { data: credentials, isLoading: credentialHistoryLoading } = useQuery(
     ['credentials'],
     () => agent?.dataStoreORMGetVerifiableCredentials(),
@@ -83,6 +82,12 @@ const CreatePresentation: React.FC = () => {
     ['identifiers', { agentId: agent?.context.id }],
     () => agent?.didManagerFind(),
   )
+  // Only allow did:ethr:sepolia identifiers
+  const filteredIdentifiers =
+    identifiers?.filter((id: any) => id.did.startsWith('did:ethr:sepolia')) ||
+    []
+  // Remove proofFormat state and always use EthereumEip712Signature2021
+  const proofFormat: ProofFormat = 'EthereumEip712Signature2021'
   const rowSelection = {
     onChange: (selectedRowKeys: React.Key[], selectedRows: DataType[]) => {
       setSelectedCredentials(
@@ -97,7 +102,7 @@ const CreatePresentation: React.FC = () => {
       issuer,
       [subject],
       selectedCredentials,
-      proofFormat,
+      proofFormat, // always EthereumEip712Signature2021
     )
 
     setIssuer('')
@@ -149,38 +154,24 @@ const CreatePresentation: React.FC = () => {
             value={subject}
             placeholder="verifier DID"
             style={{ width: '60%', marginBottom: 15 }}
-            onChange={(e) => setSubject(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setSubject(e.target.value)
+            }
           />
         </Form.Item>
         <Form.Item>
           <Select
             style={{ width: '60%' }}
             loading={identifiersLoading}
-            onChange={(e) => setIssuer(e as string)}
-            placeholder="issuer DID"
+            onChange={(e: string) => setIssuer(e)}
+            placeholder="issuer DID (did:ethr:sepolia only)"
             defaultActiveFirstOption={true}
           >
-            {identifiers &&
-              identifiers.map((id) => (
-                <Option key={id.did} value={id.did as string}>
-                  {id.did}
-                </Option>
-              ))}
-          </Select>
-        </Form.Item>
-        <Form.Item>
-          <Select
-            style={{ width: '60%' }}
-            onChange={(e) => setProofFormat(e as ProofFormat)}
-            placeholder="jwt or lds"
-            defaultActiveFirstOption={true}
-          >
-            <Option key="jwt" value="jwt">
-              jwt
-            </Option>
-            <Option key="lds" value="lds">
-              lds
-            </Option>
+            {filteredIdentifiers.map((id: { did: string }) => (
+              <Option key={id.did} value={id.did as string}>
+                {id.did}
+              </Option>
+            ))}
           </Select>
         </Form.Item>
         <Row>

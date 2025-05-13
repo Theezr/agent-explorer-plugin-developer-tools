@@ -122,7 +122,7 @@ export async function createProfileCredentials(
       
       return await createVerifiableCredential({
         save: true,
-        proofFormat: 'jwt',
+        proofFormat: 'EthereumEip712Signature2021',
         credential: {
           '@context': ['https://www.w3.org/2018/credentials/v1'],
           type: ['VerifiableCredential', 'Profile'],
@@ -168,7 +168,7 @@ export async function createKudosCredentials(
 
           return await createVerifiableCredential({
             save: true,
-            proofFormat: 'jwt',
+            proofFormat: 'EthereumEip712Signature2021',
             credential: {
               '@context': ['https://www.w3.org/2018/credentials/v1'],
               type: ['VerifiableCredential', 'Kudos'],

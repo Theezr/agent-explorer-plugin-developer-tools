@@ -36,5 +36,12 @@
 		"react-router-dom": "^6.15.0",
 		"typescript": "^5.1.6",
 		"uuid": "^9.0.0"
+	},
+	"dependencies": {
+		"@veramo/did-manager": "^6.0.0",
+		"@veramo/did-provider-ethr": "^6.0.0",
+		"@veramo/key-manager": "^6.0.0",
+		"@veramo/kms-web3": "^6.0.0",
+		"esbuild-plugin-node-externals": "^1.0.1"
 	}
 }

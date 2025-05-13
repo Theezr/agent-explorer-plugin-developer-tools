@@ -16,8 +16,11 @@ const CreateProfileCredential: React.FC = () => {
     ['identifiers', { agentId: agent?.context.id }],
     () => agent?.didManagerFind(),
   )
+  // Only allow did:ethr:sepolia identifiers
+  const filteredIdentifiers = identifiers?.filter((id: IIdentifier) => id.did.startsWith('did:ethr:sepolia')) || [];
+  // Remove proofFormat state and always use EthereumEip712Signature2021
+  const proofFormat = 'EthereumEip712Signature2021';
   const [issuer, setIssuer] = useState<string>('')
-  const [proofFormat, setProofFormat] = useState('')
   const [name, setName] = useState('')
   const [bio, setBio] = useState('')
   const [recipient, setRecipient] = useState('')
@@ -29,50 +32,29 @@ const CreateProfileCredential: React.FC = () => {
         <Select
           style={{ width: '60%' }}
           loading={identifiersLoading}
-          onChange={(e) => setIssuer(e as string)}
-          placeholder="issuer DID"
+          onChange={(e: string) => setIssuer(e)}
+          placeholder="issuer DID (did:ethr:sepolia only)"
           defaultActiveFirstOption={true}
         >
-          {identifiers &&
-            identifiers.map((id: IIdentifier) => (
-              <Option key={id.did} value={id.did as string}>
-                {id.did}
-              </Option>
-            ))}
+          {filteredIdentifiers.map((id: IIdentifier) => (
+            <Option key={id.did} value={id.did as string}>
+              {id.did}
+            </Option>
+          ))}
         </Select>
-        <Input placeholder="Name" onChange={(e) => setName(e.target.value)} />
-        <TextArea placeholder="Bio" onChange={(e) => setBio(e.target.value)} />
+        <Input placeholder="Name" onChange={(e: React.ChangeEvent<HTMLInputElement>) => setName(e.target.value)} />
+        <TextArea placeholder="Bio" onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setBio(e.target.value)} />
         <br />
-        <br />
-        <Select
-          style={{ width: '60%' }}
-          onChange={(e) => setProofFormat(e as string)}
-          placeholder="Proof type"
-          defaultActiveFirstOption={true}
-        >
-          <Option
-            key="EthereumEip712Signature2021lds"
-            value="EthereumEip712Signature2021"
-          >
-            EthereumEip712Signature2021
-          </Option>
-          <Option key="jwt" value="jwt">
-            jwt
-          </Option>
-          <Option key="lds" value="lds">
-            lds
-          </Option>
-        </Select>
         <br />
         <Input
           placeholder="Recipient DID"
-          onChange={(e) => setRecipient(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setRecipient(e.target.value)}
         />
         <br />
         <br />
         <Button
           type="primary"
-          disabled={inFlight || !proofFormat || !issuer}
+          disabled={inFlight || !issuer}
           onClick={async () => {
             try {
               setInFlight(true)

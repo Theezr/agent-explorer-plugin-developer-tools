@@ -36,12 +36,13 @@ const IssueCredential: React.FC = () => {
   const [issuer, setIssuer] = useState<string>('')
   const [subject, setSubject] = useState<string>()
   const [fields, updateFields] = useState<Field[]>([])
-  const [proofFormat, setProofFormat] = useState('jwt')
+  const proofFormat = 'EthereumEip712Signature2021'
 
   const { data: identifiers, isLoading: identifiersLoading } = useQuery(
     ['identifiers', { agentId: agent?.context.id }],
     () => agent?.didManagerFind(),
   )
+  const filteredIdentifiers = identifiers?.filter((id: IIdentifier) => id.did.startsWith('did:ethr:sepolia')) || []
 
   const updateClaimFields = (field: Field) => {
     const claimTypes = fields.map((field: Field) => field.type)
@@ -67,11 +68,6 @@ const IssueCredential: React.FC = () => {
     setClaimValue('')
     setClaimType('')
   }
-
-  // const removeClaimField = (index: number) => {
-  //   const updatedClaims = fields.filter((item: any, i: number) => i !== index)
-  //   updateFields(updatedClaims)
-  // }
 
   const signVc = async (send?: boolean) => {
     const credential = await issueCredential(
@@ -147,16 +143,15 @@ const IssueCredential: React.FC = () => {
           <Select
             style={{ width: '60%' }}
             loading={identifiersLoading}
-            onChange={(e) => setIssuer(e as string)}
-            placeholder="issuer DID"
+            onChange={(e: string) => setIssuer(e)}
+            placeholder="issuer DID (did:ethr:sepolia only)"
             defaultActiveFirstOption={true}
           >
-            {identifiers &&
-              identifiers.map((id: IIdentifier) => (
-                <Option key={id.did} value={id.did as string}>
-                  {id.did}
-                </Option>
-              ))}
+            {filteredIdentifiers.map((id: IIdentifier) => (
+              <Option key={id.did} value={id.did as string}>
+                {id.did}
+              </Option>
+            ))}
           </Select>
         </Form.Item>
         <Form.Item>
@@ -174,27 +169,6 @@ const IssueCredential: React.FC = () => {
             style={{ width: '60%' }}
             onChange={(e) => setCustomContext(e.target.value)}
           />
-        </Form.Item>
-        <Form.Item>
-          <Select
-            style={{ width: '60%' }}
-            onChange={(e) => setProofFormat(e as string)}
-            placeholder="Proof type"
-            defaultActiveFirstOption={true}
-          >
-            <Option key="jwt" value="jwt">
-              jwt
-            </Option>
-            <Option key="lds" value="lds">
-              lds
-            </Option>
-            <Option
-              key="EthereumEip712Signature2021lds"
-              value="EthereumEip712Signature2021"
-            >
-              EthereumEip712Signature2021
-            </Option>
-          </Select>
         </Form.Item>
 
         <Form.Item style={{ padding: 15 }}>

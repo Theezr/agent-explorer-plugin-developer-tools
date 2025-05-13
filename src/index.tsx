@@ -13,7 +13,7 @@ const Plugin: IPlugin = {
     //@ts-ignore
     init: (agent) => {
         return {
-          name: 'Developer tools',
+          name: 'Storm dev tools',
           description: 'Collection of tools for experimenting with verifiable data',
           icon: <CodeOutlined />,
           routes: [
@@ -36,7 +36,7 @@ const Plugin: IPlugin = {
           ],
           menuItems: [
             {
-              name: 'Developer tools',
+              name: 'Storm dev tools',
               path: '/developer',
               icon: <CodeOutlined />,
               routes: [
